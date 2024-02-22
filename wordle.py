@@ -3,7 +3,6 @@ import yaml
 from collections import Counter
 from rich.console import Console
 from rich.markup import escape
-from rich.style import Style
 
 class Wordle:
     global ALLOWED_GUESSES, word_list
@@ -13,14 +12,15 @@ class Wordle:
 
     def __init__(self):
         self._word = choice(word_list)
-        self._word = "dirge"
-        #self._word = "twice"
-        # print(len(word_list))  #4207
+        #print(self._word)
+        #self._word = "dirge"
+        self._word = "gucci"
         self._tried = []
         self.console = Console()  # Console object for interactive output
 
 
     def restart_game(self):
+        #ws = ["stare", "stale", "stake", "stave", "stage", "stale"]
         self._word = choice(word_list)
         print(self._word)
         self._tried = []

@@ -1,8 +1,11 @@
-import sys
 from wordle import Wordle
 from guesser import Guesser
 from guesserfreq import GuesserFreq
+from avg_3_62 import Guesser2
 import argparse
+import cProfile
+import pstats
+import subprocess
 
 
 class Game:
@@ -34,25 +37,51 @@ class Game:
             # print(result)
         return result, guesses
             
-            
+
+def run_games_with_profiling(run_games_func):
+    """Run the games with profiling, and visualize results using snakeviz."""
+    profiler = cProfile.Profile()
+    profiler.enable()
+    
+    run_games_func()  # Run the actual game function
+    
+    profiler.disable()
+    stats = pstats.Stats(profiler)
+    stats.dump_stats('profile_results.prof')  # Save stats for visualization
+    
+    # Use subprocess to launch snakeviz
+    subprocess.run(['snakeviz', 'profile_results.prof'])
+
+def run_games_without_profiling(run_games_func):
+    """Run the games without profiling."""
+    run_games_func()
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--r', type=int)
+    parser.add_argument('--profile', action='store_true', help='Enable profiling with snakeviz visualization')
     args = parser.parse_args()
     if args.r:
-        successes = []
         wordle = Wordle()
         guesser = Guesser('console')
-        for run in range(args.r):
-            if run > 0:
-                guesser.restart_game()
-                wordle.restart_game()
-
-            results, guesses = Game.game(wordle, guesser)
-            Game.score(results, guesses)
-        success_rate = RESULTS.count(True) / len(RESULTS) * 100
         
+        def run_games():
+            for run in range(args.r):
+                if run > 0:
+                    guesser.restart_game()
+                    wordle.restart_game()
+                
+                results, guesses = Game.game(wordle, guesser)
+                Game.score(results, guesses)
+        
+        # Decide whether to profile based on the '--profile' command-line argument
+        if args.profile:
+            run_games_with_profiling(run_games)
+        else:
+            run_games_without_profiling(run_games)
 
+        # Continue with the summary calculation and printing
+        success_rate = RESULTS.count(True) / len(RESULTS) * 100
         print("\n\n---- Game Summary ----")
         print(f"Total number of games played: {args.r}")
         print(f"You correctly guessed {success_rate:.2f}% of words.")
@@ -60,9 +89,10 @@ if __name__ == '__main__':
             avg_guesses = sum(GUESSES) / len(GUESSES)
             print(f"Average number of guesses: {avg_guesses:.2f}")
     else:
-        # Play manually on console
+        # For manual play, profiling might not be as relevant
         guesser = Guesser('manual')
         wordle = Wordle()
         print('Welcome! Let\'s play wordle! ')
         Game.game(wordle, guesser)
+
     

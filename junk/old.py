@@ -239,4 +239,35 @@ def generate_outcomes(level=0, current_pattern=''):
 
 
 
+
+            
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--r', type=int)
+    args = parser.parse_args()
+    if args.r:
+        successes = []
+        wordle = Wordle()
+        guesser = Guesser('console')
+        for run in range(args.r):
+            if run > 0:
+                guesser.restart_game()
+                wordle.restart_game()
+
+            results, guesses = Game.game(wordle, guesser)
+            Game.score(results, guesses)
+        success_rate = RESULTS.count(True) / len(RESULTS) * 100
         
+
+        print("\n\n---- Game Summary ----")
+        print(f"Total number of games played: {args.r}")
+        print(f"You correctly guessed {success_rate:.2f}% of words.")
+        if GUESSES:
+            avg_guesses = sum(GUESSES) / len(GUESSES)
+            print(f"Average number of guesses: {avg_guesses:.2f}")
+    else:
+        # Play manually on console
+        guesser = Guesser('manual')
+        wordle = Wordle()
+        print('Welcome! Let\'s play wordle! ')
+        Game.game(wordle, guesser)
