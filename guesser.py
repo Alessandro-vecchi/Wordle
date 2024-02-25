@@ -10,7 +10,6 @@ from matrix_generator import PatternMatrixGenerator
 
 
 
-
 class Guesser:
     """A class to guess words in a Wordle-like game."""
     # To store the large grid of patterns at run time
@@ -18,13 +17,13 @@ class Guesser:
 
     def __init__(self, manual):
         """Initialize the Guesser with a word list and setup for manual or automated guessing."""
-        self.word_list = self.get_word_list(isYaml=True) # 4270 if True; 2315 if False
+        self.word_list = self.get_word_list(isTrain=True) # 4270 if True; 2315 if False
 
         self._manual = manual
         self.console = Console()  # Console object for interactive output
 
         self._tried = []
-        self.current_words = self.word_list
+        self.target_words = self.word_list
 
         # Initialize PatternMatrixGenerator and load or generate the pattern matrix
         self.pattern_matrix_generator = PatternMatrixGenerator(self.word_list)
@@ -34,9 +33,9 @@ class Guesser:
 
 
     @staticmethod
-    def get_word_list(isYaml = True):
+    def get_word_list(isTrain = True):
         """Get the word list """
-        if isYaml:
+        if isTrain:
             return yaml.load(open('wordlist.yaml'), Loader=yaml.FullLoader)
         return open('wordle_list.txt').read().splitlines()
     
@@ -45,7 +44,7 @@ class Guesser:
         """Reset the game state for a new game."""
         self.console.print("[bold cyan]Game restarted! New word set loaded.[/bold cyan]")
         self._tried = []
-        self.current_words = self.word_list
+        self.target_words = self.word_list
 
     def get_guess(self, result):
         """Get the next guess based on the game state and previous result."""
@@ -66,41 +65,41 @@ class Guesser:
             pass
         else:
             # Filter the current possible words based on the last result and exclude tried words
-            self.current_words = self.filter_words(result)
+            self.target_words = self.filter_words(result)
 
-        #print("stave" in self.current_words, self.current_words)
+        # print(self.target_words)
         # Calculate the information value (entropy) for each possible word
-        information_dic = self.get_information_values()
+        information_dic = self.get_information_values_vectorized()
         
-        # First, sort by presence in self.current_words (True before False), then by entropy (decreasing)
+        # First, sort by presence in self.target_words (True before False), then by entropy (decreasing)
         word_entropy_pairs = sorted(information_dic.items(), 
-                                    key=lambda item: (-item[1], item[0] not in self.current_words))
+                                    key=lambda item: (-item[1], item[0] not in self.target_words))
 
         # Print the top n words with their corresponding information values
-        self.print_top_information_values(word_entropy_pairs)
+        #self.print_top_information_values(word_entropy_pairs)
         
         # depth_2_search(pattern_counts, information_values)
         
-        if not self.current_words:
+        if not self.target_words:
             # If no information values are available, the word is not present in the word list
             raise ValueError("No information values available. The word may not be present in the word list.")
         
         # Select the word with the maximum entropy as the best guess
         max_entropy_word = word_entropy_pairs[0][0]
-        self.print_max_entropy_word(max_entropy_word, information_dic[max_entropy_word])
+        #self.print_max_entropy_word(max_entropy_word, information_dic[max_entropy_word])
 
         return max_entropy_word
 
     def filter_words(self, result):
         """Filter the current possible words based on the feedback pattern from the last guess."""
-        pattern = self.build_pattern(result)
-        print(pattern)
+        pattern = self.build_regex(result)
+        #print(pattern)
         regex = re.compile(pattern)
         
-        return [word for word in self.current_words if regex.match(word) and word != self._tried[-1]] # - set(self._tried)
+        return [word for word in self.target_words if regex.match(word) and word != self._tried[-1]] # - set(self._tried)
     
 
-    def build_pattern(self, feedback_pattern):
+    def build_regex(self, feedback_pattern):
         """Construct a regex pattern to match words based on feedback, handling complex cases like correct, misplaced, and absent letters.
         
         Args:
@@ -136,8 +135,8 @@ class Guesser:
 
             elif feedback_char == '+':
                 # If the letter is incorrect, exclude it from the pattern
-                ex = excluded_letters if previous_guess_char in excluded_letters else previous_guess_char+excluded_letters
-                feedback_regex += f'[^{ex}]' # Example: '[^eir]'
+                ex = set(excluded_letters) | set(previous_guess_char) # if previous_guess_char in excluded_letters else previous_guess_char+excluded_letters
+                feedback_regex += f'[^{"".join(ex)}]' # Example: '[^eir]'
 
             elif feedback_char == '-':
                 # If the letter is misplaced, in addition to excluding the wrong letters also exclude the misplaced one
@@ -166,30 +165,51 @@ class Guesser:
         #print(full_pattern)
         return full_pattern
     
-    def get_information_values(self):
+    
+    def get_information_value(self):
         """Calculate the information value (entropy) for each possible word based on the current pattern matrix."""
-        l = len(self.current_words)
-        # Get the pattern counts for the current word
-        pattern_counts = self.pattern_matrix_generator.get_pattern_matrix(self.word_list, self.current_words)
-        """ k = [self.pattern_to_string(p) for p in pattern_counts[2252]]
-        print(self.word_list[2252])
-        print(Counter(k))
-        print(k)
-        print(self.current_words) """
-        # Initialize a dictionary to hold the entropy values for each word
-        information_values = {}
+        l = len(self.target_words)
+        # Get the pattern counts for all words
+        pattern_matrix = self.pattern_matrix_generator.get_pattern_matrix(self.word_list, self.target_words)
 
-        # Iterate through each word in the word list
-        for i, word in enumerate(self.word_list):
-            # Extract the pattern counts for the current word against all current possible words
-            word_pattern_counts = Counter(pattern_counts[i, :])
+        # Calculate the information value (entropy) for each word
+        information_values_array = [self.information(np.unique(row, return_counts=True)[1] / l) for row in pattern_matrix]
+        #information_values_array = [entropy(np.unique(row, return_counts=True)[1] / l, base=2) for row in pattern_matrix]
 
-            probabilities = np.array(list(word_pattern_counts.values())) / l
+        # Convert the information values array to a dictionary with words as keys
+        information_values = dict(zip(self.word_list, information_values_array))
 
-            # Calculate the information value (entropy) for the current word
-            information_values[word] = entropy(probabilities, base=2)
         return information_values
 
+    def get_information_values_vectorized(self):
+        pattern_matrix = self.pattern_matrix_generator.get_pattern_matrix(self.word_list, self.target_words)
+        l = len(self.target_words)  # Number of current words
+
+        # Initialize the distributions matrix
+        # Each row corresponds to a guess, and each column to a possible pattern (3^5 total patterns)
+        distributions = np.zeros((len(self.word_list), 3**5))
+
+        # Fill the distributions matrix using advanced indexing
+        # np.arange(len(self.word_list)) creates an array [0, 1, ..., len(self.word_list)-1] for row indices
+        row_indices = np.arange(len(self.word_list))
+        # Use pattern_matrix as column indices to increment counts for corresponding patterns
+        np.add.at(distributions, (row_indices[:, None], pattern_matrix), 1)
+
+        # Convert counts to probabilities
+        distributions /= l
+
+        # Calculate the entropy for each distribution
+        information_values_array = self.entropy_of_distributions(distributions)
+
+        # Map the entropy values back to the corresponding words
+        information_values = dict(zip(self.word_list, information_values_array))
+
+        return information_values
+    
+    @staticmethod
+    def entropy_of_distributions(distributions):
+        axis = len(distributions.shape) - 1
+        return entropy(distributions, base=2, axis=axis)
 
     
     def print_top_information_values(self, information_values, n=10):
@@ -204,7 +224,7 @@ class Guesser:
     def print_max_entropy_word(self, word, entropy):
         """Print the word with the maximum entropy before making a guess."""
         self.console.print(f"Next Guess (Max Entropy): [bold]{word}[/bold] with entropy [bold]{entropy:.4f}[/bold]")
-        self.console.print(f"Total Possible Words: {len(self.current_words)}")
+        self.console.print(f"Total Possible Words: {len(self.target_words)}")
 
     @staticmethod
     def pattern_to_int_list(pattern):
@@ -218,6 +238,11 @@ class Guesser:
     def pattern_to_string(self, pattern):
         d = {0: "+", 1: "-", 2: "l"}
         return "".join(d[x] for x in self.pattern_to_int_list(pattern))
+    
+    @staticmethod
+    def information(probabilities):
+        """Calculate the entropy (information value) for a set of probabilities."""
+        return -np.sum(probabilities * np.log2(probabilities))
 
 
 

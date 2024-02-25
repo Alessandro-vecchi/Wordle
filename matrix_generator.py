@@ -77,10 +77,8 @@ class PatternMatrixGenerator:
         # Rather than representing a color pattern as a lists of integers,
         # store it as a single integer, whose ternary representations corresponds
         # to that list of integers.
-        #print(guess_words[0], pattern_matrix[0][645], target_words[645])
-        pattern_matrix = np.dot(pattern_matrix, (3**np.arange(n_l)).astype(np.uint8))
-        #print(pattern_matrix[0][645])
-        #print(pattern_matrix)
+        pattern_matrix = np.dot(pattern_matrix, (3**np.arange(n_l)).astype(np.uint8)) # 0-242
+        
         return pattern_matrix
 
     def save_pattern_matrix(self, pattern_matrix):
@@ -99,7 +97,7 @@ class PatternMatrixGenerator:
         if not os.path.exists(self.PATTERN_MATRIX_FILE):
         
             self.console.log("\n".join([
-                    "Generating pattern matrix. This takes a minute, but",
+                    "Generating pattern matrix. This takes 20 seconds, but",
                     "the result will be saved in a file so that it only",
                     "needs to be computed once.", 
                 ]), style="bold yellow")

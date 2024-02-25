@@ -152,12 +152,11 @@ class Guesser2:
     def get_information_values(self):
         """Calculate the information value (entropy) for each word in the current possible words."""
         print(self.current_words)
-        information_values = {}
-        for word in self.word_list:
+        information_values = {} # 427000
+        for word in self.word_list: # 4270
             # Simulate feedback patterns for the word against all current possible words
             pattern_counts = Counter(self.simulate_pattern(word))
-            if word == 'grunt':
-                print(pattern_counts)
+            
             # Convert pattern counts to probabilities
             probabilities = np.array(list(pattern_counts.values())) / len(self.current_words)
             # Calculate and store the entropy for the word
@@ -168,7 +167,7 @@ class Guesser2:
     def simulate_pattern(self, word):
         """Simulate feedback patterns for a word against all current possible words."""
         # Generate and return the list of feedback patterns
-        return [self.get_pattern(word, target) for target in self.current_words]
+        return [self.get_pattern(word, target) for target in self.current_words] # 100
 
     
     def get_pattern(self, guess, target):

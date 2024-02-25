@@ -14,7 +14,7 @@ class Wordle:
         self._word = choice(word_list)
         #print(self._word)
         #self._word = "dirge"
-        self._word = "gucci"
+        #self._word = "wound"
         self._tried = []
         self.console = Console()  # Console object for interactive output
 
@@ -22,7 +22,7 @@ class Wordle:
     def restart_game(self):
         #ws = ["stare", "stale", "stake", "stave", "stage", "stale"]
         self._word = choice(word_list)
-        print(self._word)
+        #print(self._word)
         self._tried = []
         self._endgame = False
 
