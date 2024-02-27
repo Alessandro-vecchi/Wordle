@@ -14,7 +14,7 @@ class Wordle:
         self._word = choice(word_list)
         #print(self._word)
         #self._word = "dirge"
-        #self._word = "wound"
+        #self._word = "edwin"
         self._tried = []
         self.console = Console()  # Console object for interactive output
 
@@ -46,7 +46,7 @@ class Wordle:
 
         return ''.join(results)
 
-    def check_guess(self, guess):
+    def check_guess(self, guess, do_print=True):
         result = False
         end_game = False
         guess = guess.lower().strip() # convert to lowercase and remove leading/trailing whitespace
@@ -63,13 +63,17 @@ class Wordle:
             if guess == self._word:
                 end_game = True
                 result = self._word
-                print('Congratulations, you guessed the word!')
+                if do_print:
+                    print('Congratulations, you guessed the word!')
             else:
                 result = self.get_matches(guess)
                 if len(self._tried) == ALLOWED_GUESSES:
-                    print('Sorry, you did not guess the word. The word was ', self._word)
+                    if do_print:
+                        print('Sorry, you did not guess the word. The word was ', self._word)
                     end_game = True
-            self.print_feedback_pattern(guess, result)
+
+            if do_print:
+                self.print_feedback_pattern(guess, result)
         
         return result, end_game
     

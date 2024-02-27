@@ -6,7 +6,9 @@ import argparse, os
 import cProfile
 import pstats
 import subprocess
+import contextlib
 import matplotlib.pyplot as plt, numpy as np
+from tqdm import tqdm
 
 
 class Game:
@@ -25,19 +27,27 @@ class Game:
 
 
 
-    def game(wordle, guesser):
+    def game(wordle, guesser, do_print=True):
         endgame = False
         guesses = 0
         result = None
         while not endgame:
             guesses += 1
-            print(" ")
-            print(" " + "-"*4 + f"Guess {guesses}" + "-"*25+" ")
-            guess = guesser.get_guess(result)
-            result, endgame = wordle.check_guess(guess)    
+            if do_print:
+                print("\n " + "-"*4 + f"Guess {guesses}" + "-"*25+" ")
+            guess = guesser.get_guess(result, do_print)
+            result, endgame = wordle.check_guess(guess, do_print)    
             # print(result)
         return result, guesses
             
+
+@contextlib.contextmanager
+def managed_subprocess(*args, **kwargs):
+    process = subprocess.Popen(*args, **kwargs)
+    try:
+        yield process
+    finally:
+        process.terminate()
 
 def run_games_with_profiling(run_games_func):
     """Run the games with profiling, and visualize results using snakeviz."""
@@ -50,8 +60,10 @@ def run_games_with_profiling(run_games_func):
     stats = pstats.Stats(profiler)
     stats.dump_stats('profile_results.prof')  # Save stats for visualization
     
-    # Use subprocess to launch snakeviz
-    subprocess.run(['snakeviz', 'profile_results.prof'])
+    # Automatically close the snakeviz subprocess
+    with managed_subprocess(['snakeviz', 'profile_results.prof']):
+        input("Press Enter to close snakeviz...")  # Wait for user input to proceed
+
 
 def run_games_without_profiling(run_games_func):
     """Run the games without profiling."""
@@ -91,30 +103,39 @@ def save_guesses_histogram(g, filename='guesses_distribution.png'):
     plt.close()
 
 
-
+# python3 game.py --r 300 --profile --save guesses_distribution.png
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--r', type=int)
     parser.add_argument('--profile', action='store_true', help='Enable profiling with snakeviz visualization')
-    parser.add_argument('--save', type=str, action='save data', help='Save histogram plot of guesses distribution to a file.')
+    parser.add_argument('--save', type=str, help='Save histogram plot of guesses distribution to a file.')
+    parser.add_argument('--print', action="store_true", help='Enable print of the game.')
     args = parser.parse_args()
     if args.r:
         wordle = Wordle()
         guesser = Guesser('console')
-        
+
         def run_games():
-            for run in range(args.r):
+            n = range(args.r) if args.print else tqdm(range(args.r), desc="Running Games", unit="game")
+            for run in n:
                 if run > 0:
-                    guesser.restart_game()
+                    guesser.restart_game(args.print)
                     wordle.restart_game()
 
-                print(f"* ------- Run: {run} ------------- *")
+                if args.print:
+                    print(f"* ------- Run: {run} ------------- *")
+
 
 
                 
-                results, guesses = Game.game(wordle, guesser)
+                results, guesses = Game.game(wordle, guesser, args.print)
                 Game.score(results, guesses)
 
+        # Decide whether to profile based on the '--profile' command-line argument
+        if args.profile:
+            run_games_with_profiling(run_games)
+        else:
+            run_games_without_profiling(run_games)
         # Continue with the summary calculation and printing
         success_rate = RESULTS.count(True) / len(RESULTS) * 100
         print("\n\n---- Game Summary ----")
@@ -127,12 +148,10 @@ if __name__ == '__main__':
         if args.save:
             save_guesses_histogram(GUESSES, file=args.save)
         
-
-        # Decide whether to profile based on the '--profile' command-line argument
         if args.profile:
-            run_games_with_profiling(run_games)
-        else:
-            run_games_without_profiling(run_games)
+            # Use subprocess to launch snakeviz
+            subprocess.run(['snakeviz', 'profile_results.prof'])
+
     else:
         # For manual play, profiling might not be as relevant
         guesser = Guesser('manual')
