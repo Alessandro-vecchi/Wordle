@@ -14,7 +14,7 @@ class Wordle:
         self._word = choice(word_list)
         #print(self._word)
         #self._word = "dirge"
-        #self._word = "edwin"
+        self._word = "wound"
         self._tried = []
         self.console = Console()  # Console object for interactive output
 

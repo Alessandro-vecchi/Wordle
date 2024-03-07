@@ -17,6 +17,7 @@ class PatternMatrixGenerator:
     MISPLACED = np.uint8(1)  
     EXACT = np.uint8(2)     
     
+    ALPHABET = "abcdefghijklmnopqrstuvwxyz"
     PATTERN_MATRIX_FILE = "pattern_matrix.npy"
 
     def __init__(self, word_list):
@@ -29,10 +30,11 @@ class PatternMatrixGenerator:
             words_to_index_map (dict): Maps words to their indices in the pattern matrix.
             console (Console): Console object for logging messages.
         """
-        self.word_list = word_list
+        self.target_word_list = word_list
+        self.guessable_word_list = word_list
 
         self.grid = None
-        self.words_to_index_map = dict(zip(self.word_list, it.count()))
+        self.words_to_index_map = dict(zip(self.guessable_word_list, it.count()))
 
         self.console = Console()
 
@@ -56,7 +58,7 @@ class PatternMatrixGenerator:
         Returns:
             np.ndarray: The generated pattern matrix.
         """
-        guess_words, target_words = self.word_list, self.word_list
+        guess_words, target_words = self.guessable_word_list, self.target_word_list
         guess_array, target_array = self.words_to_int_arrays(guess_words), self.words_to_int_arrays(target_words) # (n_gw, n_l), (n_tw, n_l)
         n_l = len(guess_words[0])
 
@@ -94,6 +96,9 @@ class PatternMatrixGenerator:
         """
         Loads the pattern matrix from a file, or generates and saves it if not present.
         """
+        #if os.path.exists(self.PATTERN_MATRIX_FILE):
+         #   os.remove(self.PATTERN_MATRIX_FILE)
+
         if not os.path.exists(self.PATTERN_MATRIX_FILE):
         
             self.console.log("\n".join([
@@ -128,11 +133,11 @@ class PatternMatrixGenerator:
         # Load the pattern matrix if it hasn't been loaded already
         if self.grid is None:
             self.load_pattern_matrix()
-        
+            
         # Map guess and target words to their indices in the pattern matrix
         indices_guess_words = [self.words_to_index_map[w] for w in guess_words]
         indices_target_words = [self.words_to_index_map[w] for w in target_words]
-
+        
         # Return the relevant submatrix of the pattern matrix
         # Return pattern entries on the rows of the guess words and columns of the target words
         return self.grid[np.ix_(indices_guess_words, indices_target_words)]

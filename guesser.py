@@ -1,6 +1,5 @@
 import numpy as np
 import os, re
-from collections import Counter
 from scipy.stats import entropy
 import itertools as it
 import yaml
@@ -54,7 +53,7 @@ class Guesser:
         self._tried.append(guess)
         return guess
 
-    def get_best_guess(self, result, do_print = True, first_guess = "aires"):
+    def get_best_guess(self, result, do_print = True, first_guess = "sound"):
         """Determine the best next guess based on the current game state and previous result."""
         if not self._tried and first_guess is not None:
             # For the first guess, use a fixed word to ensure consistent results
@@ -63,7 +62,7 @@ class Guesser:
         if self._tried:
             # Filter the current possible words based on the last result and exclude tried words
             self.target_words = self.filter_words(result)
-            # print(self.target_words)
+            print(self.target_words)
 
         # Calculate the information value (entropy) for each possible word
         information_dic = self.get_entropies()
