@@ -45,7 +45,8 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#usage">Roadmap</a></li>
+    <li><a href="#examples">Examples</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -81,10 +82,30 @@ Once cloned, you can run the project with the following bash command:
 python3 game.py --r int --print --profile --save filename.png
 ```
 
-- The program argument --r is mandatory and refers to the number of runs of the wordle game. You can type any integer.
-- The argument --print is optional. If added, print useful informations on the run, like the feedbacks from Wordle for each game, the top 10 words by entropy chosen by the guesser and the total possible pool of words to choose from.
-- The argument --profile is optional. If added, opens a page browser where all the profile information of the functions can be seen.
-- The argument --save is optional. If added, save the current distribution of guesses in a file named "filename.png" in the plot folder.
+- The program argument `--r` is mandatory and refers to the number of runs of the wordle game. You can type any integer.
+- The argument `--print` is optional. If added, print useful informations on the run, like the feedbacks from Wordle for each game, the top 10 words by entropy chosen by the guesser and the total possible pool of words to choose from.
+- The argument `--profile` is optional. If added, opens a page browser where all the profile information of the functions can be seen.
+- The argument `--save` is optional. If added, save the current distribution of guesses in a file named "filename.png" in the plot folder.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Examples
+
+The following is an instance of what's printed if the `--print` command is given:
+
+<div align="center">
+  <img src="screen/Distribution.png" alt="Top 10 entropy words" width="300">
+</div>
+
+The top 10 words by entropy are shown, along with the current size of the target list and the feedback from the game.
+
+The performance is pretty solid thanks to its adaptability to the game. Let's consider the following example:
+
+<div align="center">
+  <img src="screen/edge-case.png" alt="Edge case" width="300">
+</div>
+
+Here, we got lucky, meaning that our guess reduced the possible target words to 7. However, they all end in **ound**, therefore a random guesser could exhaust the guesses before guessing the word, even though there are only 7 words in the pool. This guesser instead, tries the word that gives the greater amount of information, reducing the size of the bucket as much as possible.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
