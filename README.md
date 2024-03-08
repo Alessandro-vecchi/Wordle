@@ -128,13 +128,13 @@ Project Link: [https://github.com/Alessandro-vecchi/Wordle](https://github.com/A
 [forks-shield]: https://img.shields.io/github/forks/Alessandro-vecchi/Wordle.svg?style=for-the-badge
 [forks-url]: https://github.com/Alessandro-vecchi/Wordle/network/members
 
-[stars-shield]: https://img.shields.io/github/stars/Alessandro-vecchi/Wordle.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/Alessandro-vecchi/Wordle.svg?style=for-the-badge&logo=github&color=%23FFDD00
 [stars-url]: https://github.com/Alessandro-vecchi/Wordle/stargazers
 
 [issues-shield]: https://img.shields.io/github/issues/Alessandro-vecchi/Wordle.svg?style=for-the-badge
 [issues-url]: https://github.com/Alessandro-vecchi/Wordle/issues
 
-[license-shield]: https://img.shields.io/github/license/Alessandro-vecchi/Wordle?style=for-the-badge&logo=github&color=%23FFDD00
+[license-shield]: https://img.shields.io/github/license/Alessandro-vecchi/Wordle?style=for-the-badge
 [license-url]: https://github.com/Alessandro-vecchi/Wordle/blob/master/LICENSE.txt
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
