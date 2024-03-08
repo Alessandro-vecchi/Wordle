@@ -1,7 +1,5 @@
 from wordle import Wordle
 from guesser import Guesser
-from guesserfreq import GuesserFreq
-from avg_3_62 import Guesser2
 import argparse, os
 import cProfile
 import pstats
@@ -12,6 +10,7 @@ from tqdm import tqdm
 
 
 class Game:
+
     global RESULTS, GUESSES
     GUESSES = [] # number of guesses per game
     RESULTS = [] # was the word guessed?

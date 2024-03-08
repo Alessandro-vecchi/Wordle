@@ -1,5 +1,5 @@
 from random import choice
-import yaml
+import yaml, os
 from collections import Counter
 from rich.console import Console
 from rich.markup import escape
@@ -7,14 +7,14 @@ from rich.markup import escape
 class Wordle:
     global ALLOWED_GUESSES, word_list
     ALLOWED_GUESSES = 6
-    word_list = yaml.load(open('wordlist.yaml'), Loader=yaml.FullLoader)
+    DATA_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)),"data")
+    WORD_LIST = os.path.join(DATA_DIR, "wordlist.yaml")
+    word_list = yaml.load(open(WORD_LIST), Loader=yaml.FullLoader)
     #word_list = open('wordle_list.txt').read().splitlines()
 
     def __init__(self):
         self._word = choice(word_list)
-        #print(self._word)
-        #self._word = "dirge"
-        self._word = "wound"
+        # self._word = "wound"
         self._tried = []
         self.console = Console()  # Console object for interactive output
 
@@ -22,7 +22,6 @@ class Wordle:
     def restart_game(self):
         #ws = ["stare", "stale", "stake", "stave", "stage", "stale"]
         self._word = choice(word_list)
-        #print(self._word)
         self._tried = []
         self._endgame = False
 
@@ -32,16 +31,16 @@ class Wordle:
         counts = Counter(self._word)
         results = []
         for i, letter in enumerate(guess):
-            if guess[i] == self._word[i]:
-                results+=guess[i]
-                counts[guess[i]]-=1
+            if letter == self._word[i]:
+                results+=letter
+                counts[letter]-=1
             else:
                 results+='+'
 
         for i, letter in enumerate(guess):
-            if guess[i] != self._word[i] and guess[i] in self._word:
-                if counts[guess[i]]>0:
-                    counts[guess[i]]-=1
+            if letter != self._word[i] and letter in self._word:
+                if counts[letter]>0:
+                    counts[letter]-=1
                     results[i]='-'
 
         return ''.join(results)

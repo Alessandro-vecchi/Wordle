@@ -17,8 +17,9 @@ class PatternMatrixGenerator:
     MISPLACED = np.uint8(1)  
     EXACT = np.uint8(2)     
     
+    DATA_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)),"data")
     ALPHABET = "abcdefghijklmnopqrstuvwxyz"
-    PATTERN_MATRIX_FILE = "pattern_matrix.npy"
+    PATTERN_MATRIX_FILE = os.path.join(DATA_DIR, "pattern_matrix.npy")
 
     def __init__(self, word_list):
         """

@@ -12,6 +12,9 @@ from matrix_generator import PatternMatrixGenerator
 class Guesser:
     """A class to guess words in a Wordle-like game."""
 
+    DATA_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)),"data")
+    WORD_LIST = os.path.join(DATA_DIR, "wordlist.yaml")
+
     def __init__(self, manual):
         """Initialize the Guesser with a word list and setup for manual or automated guessing."""
         self.word_list = self.get_word_list(isTrain=True) # 4270 if True; 2315 if False
@@ -27,12 +30,11 @@ class Guesser:
         self.pattern_matrix_generator.get_pattern_matrix(self.word_list, self.word_list)
 
 
-    @staticmethod
-    def get_word_list(isTrain = True):
+    def get_word_list(self, isTrain = True):
         """Get the word list """
         if isTrain:
-            return yaml.load(open('wordlist.yaml'), Loader=yaml.FullLoader)
-        return open('wordle_list.txt').read().splitlines()
+            return yaml.load(open(self.WORD_LIST), Loader=yaml.FullLoader)
+        return open('data/wordle_list.txt').read().splitlines()
     
 
     def restart_game(self, do_print = True):
@@ -62,7 +64,6 @@ class Guesser:
         if self._tried:
             # Filter the current possible words based on the last result and exclude tried words
             self.target_words = self.filter_words(result)
-            print(self.target_words)
 
         # Calculate the information value (entropy) for each possible word
         information_dic = self.get_entropies()
