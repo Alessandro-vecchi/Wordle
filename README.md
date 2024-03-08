@@ -59,7 +59,7 @@
 The project aims at minimizing the number of guesses to solve a wordle game.
 
 <div align="center">
-  <img src="media/images/walle_description.png" alt="Wall-e description" width="80%">
+  <img src="screen/walle_description.png" alt="Wall-e description" width="80%">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -93,11 +93,10 @@ python3 game.py --r int --print --profile --save filename.png
 
 - [x] Add Badges
 - [x] Add back to top links
-- [x] Add Video
 - [x] Add License 
 - [x] Add Contact
-- [ ] Add Usage
-- [ ] Add Getting Started
+- [x] Add Usage
+- [x] Add Getting Started
 - [ ] Add Changelog
       
 <!-- LICENSE -->
@@ -121,19 +120,19 @@ Project Link: [https://github.com/Alessandro-vecchi/Wordle](https://github.com/A
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/Alessandro-vecchi/Wall-E.svg?style=for-the-badge
-[contributors-url]: https://github.com/Alessandro-vecchi/Wall-E/graphs/contributors
+[contributors-url]: https://github.com/Alessandro-vecchi/Wordle/graphs/contributors
 
 [forks-shield]: https://img.shields.io/github/forks/Alessandro-vecchi/Wall-E.svg?style=for-the-badge
-[forks-url]: https://github.com/Alessandro-vecchi/Wall-E/network/members
+[forks-url]: https://github.com/Alessandro-vecchi/Wordle/network/members
 
 [stars-shield]: https://img.shields.io/github/stars/Alessandro-vecchi/Wall-E.svg?style=for-the-badge
-[stars-url]: https://github.com/Alessandro-vecchi/Wall-E/stargazers
+[stars-url]: https://github.com/Alessandro-vecchi/Wordle/stargazers
 
 [issues-shield]: https://img.shields.io/github/issues/Alessandro-vecchi/Wall-E.svg?style=for-the-badge
-[issues-url]: https://github.com/Alessandro-vecchi/Wall-E/issues
+[issues-url]: https://github.com/Alessandro-vecchi/Wordle/issues
 
 [license-shield]: https://img.shields.io/github/license/Alessandro-vecchi/Wall-E.svg?style=for-the-badge
-[license-url]: https://github.com/Alessandro-vecchi/Wall-E/blob/master/LICENSE.txt
+[license-url]: https://github.com/Alessandro-vecchi/Wordle/blob/master/LICENSE.txt
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/alessandro-v-6711
