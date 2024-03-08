@@ -18,7 +18,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/alessandro-vecchi/Wordle">
-    <img src="https://assets-prd.ignimgs.com/2022/04/15/wordle-1650045194490.jpg?width=300&crop=1%3A1%2Csmart&auto=webp&dpr=2" alt="Logo" width="200">
+    <img src="https://assets-prd.ignimgs.com/2022/04/15/wordle-1650045194490.jpg?width=300&crop=1%3A1%2Csmart&auto=webp&dpr=2" alt="Logo" width="400">
   </a>
 
   <h3 align="center">Wordle Solver</h3>
@@ -59,7 +59,7 @@
 The project aims at minimizing the number of guesses to solve a wordle game.
 
 <div align="center">
-  <img src="screen/game.png" alt="Wordle game" width="200">
+  <img src="screen/game.png" alt="Wordle game" width="300">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
