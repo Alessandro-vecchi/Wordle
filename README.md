@@ -59,7 +59,7 @@
 The project aims at minimizing the number of guesses to solve a wordle game.
 
 <div align="center">
-  <img src="screen/walle_description.png" alt="Wall-e description" width="80%">
+  <img src="screen/wordle.png" alt="Wordle game" width="80%">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
