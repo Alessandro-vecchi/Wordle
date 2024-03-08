@@ -119,7 +119,7 @@ Project Link: [https://github.com/Alessandro-vecchi/Wordle](https://github.com/A
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/Alessandro-vecchi/Wall-E.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/Alessandro-vecchi/Wordle.svg
 [contributors-url]: https://github.com/Alessandro-vecchi/Wordle/graphs/contributors
 
 [forks-shield]: https://img.shields.io/github/forks/Alessandro-vecchi/Wordle.svg?style=for-the-badge
