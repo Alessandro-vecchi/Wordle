@@ -134,7 +134,7 @@ Project Link: [https://github.com/Alessandro-vecchi/Wordle](https://github.com/A
 [issues-shield]: https://img.shields.io/github/issues/Alessandro-vecchi/Wordle.svg?style=for-the-badge
 [issues-url]: https://github.com/Alessandro-vecchi/Wordle/issues
 
-[license-shield]: https://img.shields.io/github/license/Alessandro-vecchi/Wordle.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/Alessandro-vecchi/Wordle?style=for-the-badge&logo=github&color=%23FFDD00
 [license-url]: https://github.com/Alessandro-vecchi/Wordle/blob/master/LICENSE.txt
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
